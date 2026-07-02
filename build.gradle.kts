@@ -12,21 +12,31 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))        // Kotlin stdlib
-    testImplementation(kotlin("test"))      // JUnit + Kotlin test
+    implementation(kotlin("stdlib"))
+
+    // Required for StateFlow, Dispatchers, and Coroutine Scopes
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    // Required to safely bridge Coroutine execution back to the JavaFX Application Thread
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.11.0")
+
+    testImplementation(kotlin("test"))
 }
 
 kotlin {
-    jvmToolchain(24)                        // leave as-is if you really use JDK 24
+    // Aligned to Java 21 LTS for optimal stability with JavaFX 22+
+    jvmToolchain(21)
 }
 
-// JavaFX configuration
 javafx {
     version = "22.0.2"
     modules("javafx.controls", "javafx.graphics")
 }
 
-// Point this at your JavaFX Application subclass
 application {
-    mainClass.set("tabletopfx.ui.Main")
+    // Corrected package pointer to match the root project directory architecture
+    mainClass.set("tabletopfx.Main")
+}
+
+tasks.processResources {
+    exclude("**/desktop.ini", "**/.DS_Store")
 }
